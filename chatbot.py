@@ -3,6 +3,9 @@ if(os.path.exists('./config.py')):
     from config import *
 else:
     print("help!")
+    username = os.environ['username']
+    client_id = os.environ['client_id']
+    token = os.environ['token']
 import sys
 import irc.bot
 import requests
@@ -24,7 +27,6 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         port = 6667
         print ('Connecting to ' + server + ' on port ' + str(port) + '...')
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port, 'oauth:'+token)], username, username)
-        print("Debug")
 
     def on_welcome(self, c, e):
         print('Joining ' + self.channel)
