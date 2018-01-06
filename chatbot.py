@@ -2,7 +2,6 @@ import os
 if(os.path.exists('./config.py')):
     from config import *
 else:
-    print("help!")
     username = os.environ['username']
     client_id = os.environ['client_id']
     token = os.environ['token']
@@ -25,12 +24,10 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # Create IRC bot connection
         server = 'irc.chat.twitch.tv'
         port = 6667
-        print ('Connecting to ' + server + ' on port ' + str(port) + '...')
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port, 'oauth:'+token)], username, username)
-
+        #for personal reference -- list of events: "error","join","kick","mode","part","ping","privmsg","privnotice","pubmsg","pubnotice","quit","invite","pong","action","topic","nick"
+    
     def on_welcome(self, c, e):
-        print('Joining ' + self.channel)
-
         # You must request specific capabilities before you can use them
         c.cap('REQ', ':twitch.tv/membership')
         c.cap('REQ', ':twitch.tv/tags')
@@ -38,11 +35,9 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         c.join(self.channel)
 
     def on_pubmsg(self, c, e):
-
         # If a chat message starts with an exclamation point, try to run it as a command
         if e.arguments[0][:1] == '!':
             cmd = e.arguments[0].split(' ')[0][1:]
-            print ('Received command: ' + cmd)
             self.do_command(e, cmd)
         return
 
@@ -65,11 +60,9 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             c.privmsg(self.channel,message)
 def main():
     if len(sys.argv) != 2:
-        print("Usage: twitchbot <channel>")
         sys.exit(1)
 
     channel = sys.argv[1]
-    print("{} {} {}".format(username, client_id, token))
     bot = TwitchBot(username, client_id, token, channel)
     bot.start()
 
