@@ -51,7 +51,18 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         if cmd == "ping":
             message = "pong"            
             c.privmsg(self.channel, message)
-
+        elif cmd == "donate":
+            message = "Donate to HelpHopeLive here: https://unofficialkernal.github.io/controllersforcharity/"
+            c.privmsg(self.channel, message)
+        elif cmd == "discord"
+            message = "Want to join the CFC community? Join our discord server here: https://discord.gg/atDpjQM"
+            c.privmsg(self.channel,message)
+        elif cmd == "members"
+            message = "Get to know our CFC members here: https://unofficialkernal.github.io/controllersforcharity/team.html"
+            c.privmsg(self.channel,message)
+        elif cmd == "total"
+            message = "Total so far: TBA"
+            c.privmsg(self.channel,message)
 def main():
     if len(sys.argv) != 2:
         print("Usage: twitchbot <channel>")
