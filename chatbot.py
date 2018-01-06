@@ -54,13 +54,13 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         elif cmd == "donate":
             message = "Donate to HelpHopeLive here: https://unofficialkernal.github.io/controllersforcharity/"
             c.privmsg(self.channel, message)
-        elif cmd == "discord"
+        elif cmd == "discord":
             message = "Want to join the CFC community? Join our discord server here: https://discord.gg/atDpjQM"
             c.privmsg(self.channel,message)
-        elif cmd == "members"
+        elif cmd == "members":
             message = "Get to know our CFC members here: https://unofficialkernal.github.io/controllersforcharity/team.html"
             c.privmsg(self.channel,message)
-        elif cmd == "total"
+        elif cmd == "total":
             message = "Total so far: TBA"
             c.privmsg(self.channel,message)
 def main():
