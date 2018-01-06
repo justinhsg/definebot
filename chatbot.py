@@ -1,4 +1,8 @@
-from config import *
+import os
+if(os.path.exists('./config.py')):
+    from config import *
+else:
+    print("help!")
 import sys
 import irc.bot
 import requests
