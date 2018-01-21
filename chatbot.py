@@ -83,7 +83,6 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def send_message(self, message):
         c = self.connection
         currentTime = time() - self.timeZero
-        print(self.timeZero)
         if(len(self.messageCooldown) < self.dequesize):
             try:
                 c.privmsg(self.channel, message)
