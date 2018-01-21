@@ -19,6 +19,8 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     messageCooldown = deque(maxlen = dequesize)
     timeZero = 0.0
     allowLoop = True
+    loopThread = None
+    
     def __init__(self, username, client_id, token, channel):
         self.client_id = client_id
         self.token = token
@@ -42,10 +44,12 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         c.cap('REQ', ':twitch.tv/tags')
         c.cap('REQ', ':twitch.tv/commands')
         c.join(self.channel)
-        timeZero = time()
-        loopThread = threading.Thread(target = self.start_timer)
-        loopThread.start()
-        
+        self.timeZero = time()
+        self.loopThread = threading.Thread(target = self.start_timer)
+        self.loopThread.start()
+        print("Ready for commands...")
+        return
+
     def on_pubmsg(self, c, e):
         # If a chat message starts with an exclamation point, try to run it as a command
         if e.arguments[0][:1] == '!':
@@ -64,19 +68,14 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             message = "Get to know our CFC members here: https://unofficialkernal.github.io/controllersforcharity/team.html"
         elif cmd == "total":
             message = "Total so far: TBA"
-        elif cmd == "cooldown":
-            message = ""
-            for i in self.messageCooldown:
-                message = message + str(i) + ", "
-            message = message[:-2]
-        if (cmd == "stoptimer" and self.allowLoop == True):
+        elif (cmd == "stoptimer" and self.allowLoop == True):
             self.allowLoop = False
-            message = "Stopping Timer..."
-        if (cmd == "starttimer" and self.allowLoop == False):
-            message = "Starting Timer..."
+            message = "Timer Stopped"
+        elif (cmd == "starttimer" and self.allowLoop == False):
             self.allowLoop = True
-            loopThread = threading.Thread(target = self.start_timer)
-            loopThread.start()
+            self.loopThread = threading.Thread(target = self.start_timer)
+            self.loopThread.start()
+            message = "Timer Started"
         if(message != ""):
             self.send_message(message)
         return
@@ -84,6 +83,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def send_message(self, message):
         c = self.connection
         currentTime = time() - self.timeZero
+        print(self.timeZero)
         if(len(self.messageCooldown) < self.dequesize):
             try:
                 c.privmsg(self.channel, message)
@@ -102,12 +102,15 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         return
                 
     def start_timer(self):
+        timerCount = 0
         while(True):
             if(self.allowLoop):
-                sleep(15 * 60)
-                self.send_message("This message is sent every 15 minutes!")
+                if(timerCount % (15*60) == 0):
+                    self.send_message("This message is sent every 15 minutes!")
             else:
                 break
+            timerCount += 1
+            sleep(1)
         return
             
 def main():
