@@ -1,1 +1,1 @@
-worker: python chatbot.py definenull
+worker: python chatbot.py
